@@ -23,3 +23,10 @@ MN(4) + VERSION(4) + METHOD(32) + BODY(N) + SIGNATURE(sha256) + RE-SIGNATURE(sha
 ## 架构
 
 - 使用 cobra.
+
+## 示例
+
+```shell
+cat examples/example.json | qed -e 123456 > examples/example.json.enc
+cat examples/example.json.enc | qed -d 123456
+```

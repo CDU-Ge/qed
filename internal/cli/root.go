@@ -3,6 +3,7 @@ package cli
 import (
 	"fmt"
 	"io"
+	"io/fs"
 
 	"github.com/spf13/cobra"
 
@@ -23,6 +24,9 @@ func NewRootCommand(stdin io.Reader, stdout, stderr io.Writer) *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if encrypt == decrypt {
 				return fmt.Errorf("set exactly one of -e or -d")
+			}
+			if encrypt && isTerminalWriter(stdout) {
+				return fmt.Errorf("refusing to write encrypted binary output to terminal; redirect stdout, for example: qed -e password > file.enc")
 			}
 
 			input, err := io.ReadAll(stdin)
@@ -56,6 +60,21 @@ func NewRootCommand(stdin io.Reader, stdout, stderr io.Writer) *cobra.Command {
 	cmd.AddCommand(newVersionCommand(stdout))
 
 	return cmd
+}
+
+func isTerminalWriter(writer io.Writer) bool {
+	statter, ok := writer.(interface {
+		Stat() (fs.FileInfo, error)
+	})
+	if !ok {
+		return false
+	}
+
+	info, err := statter.Stat()
+	if err != nil {
+		return false
+	}
+	return info.Mode()&fs.ModeCharDevice != 0
 }
 
 func newVersionCommand(stdout io.Writer) *cobra.Command {
