@@ -39,3 +39,20 @@ func TestRootCommandRequiresSingleMode(t *testing.T) {
 		t.Fatalf("Execute() error = %v, want mode validation", err)
 	}
 }
+
+func TestRootCommandVersion(t *testing.T) {
+	var stdout bytes.Buffer
+	cmd := NewRootCommand(strings.NewReader(""), &stdout, &bytes.Buffer{})
+	cmd.SetArgs([]string{"version"})
+
+	if err := cmd.Execute(); err != nil {
+		t.Fatalf("Execute() error = %v", err)
+	}
+
+	got := stdout.String()
+	for _, want := range []string{"qed dev", "commit: none", "built: unknown"} {
+		if !strings.Contains(got, want) {
+			t.Fatalf("version output = %q, want to contain %q", got, want)
+		}
+	}
+}

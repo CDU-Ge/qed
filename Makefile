@@ -3,6 +3,9 @@ CMD := ./cmd/qed
 DIST_DIR := dist
 LOCAL_BIN := $(HOME)/.local/bin
 GLOBAL_BIN := /usr/local/bin
+VERSION ?= $(shell git describe --tags --always --dirty 2>/dev/null || echo dev)
+COMMIT ?= $(shell git rev-parse --short HEAD 2>/dev/null || echo none)
+BUILD_DATE ?= $(shell date -u +%Y-%m-%dT%H:%M:%SZ)
 PLATFORMS ?= \
 	aix/ppc64 \
 	darwin/amd64 \
@@ -45,7 +48,7 @@ PLATFORMS ?= \
 	windows/amd64 \
 	windows/arm64
 GOFLAGS ?=
-LDFLAGS ?= -s -w
+LDFLAGS ?= -s -w -X qed/internal/version.Version=$(VERSION) -X qed/internal/version.Commit=$(COMMIT) -X qed/internal/version.Date=$(BUILD_DATE)
 
 .PHONY: build clean install uninstall install-global uninstall-global
 

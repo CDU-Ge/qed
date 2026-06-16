@@ -7,6 +7,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"qed/internal/codec"
+	"qed/internal/version"
 )
 
 func NewRootCommand(stdin io.Reader, stdout, stderr io.Writer) *cobra.Command {
@@ -52,6 +53,27 @@ func NewRootCommand(stdin io.Reader, stdout, stderr io.Writer) *cobra.Command {
 	cmd.SetErr(stderr)
 	cmd.Flags().BoolVarP(&encrypt, "encrypt", "e", false, "encrypt stdin")
 	cmd.Flags().BoolVarP(&decrypt, "decrypt", "d", false, "decrypt stdin")
+	cmd.AddCommand(newVersionCommand(stdout))
 
 	return cmd
+}
+
+func newVersionCommand(stdout io.Writer) *cobra.Command {
+	return &cobra.Command{
+		Use:           "version",
+		Short:         "Print qed version information",
+		Args:          cobra.NoArgs,
+		SilenceErrors: true,
+		SilenceUsage:  true,
+		RunE: func(cmd *cobra.Command, args []string) error {
+			_, err := fmt.Fprintf(
+				stdout,
+				"qed %s\ncommit: %s\nbuilt: %s\n",
+				version.Version,
+				version.Commit,
+				version.Date,
+			)
+			return err
+		},
+	}
 }
