@@ -2,6 +2,64 @@
 
 `qed` 是一个基于 Go 的命令行工具，旨在提供高效、可靠的 `加密`, `解密`功能.
 
+## 安装
+
+> **一键安装**（复制即用）
+
+```shell
+curl -fsSL https://raw.githubusercontent.com/CDU-Ge/qed/main/install.sh | sh
+```
+
+或使用 wget:
+
+```shell
+wget -qO- https://raw.githubusercontent.com/CDU-Ge/qed/main/install.sh | sh
+```
+
+默认安装到 `~/.local/bin/qed`，确保该目录在 PATH 中:
+
+```shell
+export PATH="$HOME/.local/bin:$PATH"
+```
+
+### 安装选项
+
+```shell
+curl -fsSL https://raw.githubusercontent.com/CDU-Ge/qed/main/install.sh | sh -s -- --help
+```
+
+| 选项                  | 说明                      |
+|---------------------|-------------------------|
+| `--version <tag>`   | 指定版本标签，例如 v0.1.0        |
+| `--dir <path>`      | 安装目录，默认 ~/.local/bin    |
+| `--repo <repo>`     | GitHub 仓库，默认 CDU-Ge/qed |
+| `--progress <mode>` | 进度模式: auto, bar, quiet  |
+| `--quiet`           | 静默安装                    |
+
+### 环境变量
+
+| 变量                | 说明             |
+|-------------------|----------------|
+| `QED_VERSION`     | 同 `--version`  |
+| `QED_INSTALL_DIR` | 同 `--dir`      |
+| `QED_REPO`        | 同 `--repo`     |
+| `QED_BINARY_NAME` | 安装的命令名称，默认 qed |
+| `QED_PROGRESS`    | 同 `--progress` |
+
+### 示例
+
+安装指定版本:
+
+```shell
+curl -fsSL https://raw.githubusercontent.com/CDU-Ge/qed/main/install.sh | sh -s -- --version v0.1.0
+```
+
+安装到自定义目录:
+
+```shell
+curl -fsSL https://raw.githubusercontent.com/CDU-Ge/qed/main/install.sh | sh -s -- --dir /usr/local/bin
+```
+
 ## Commands
 
 ```shell
