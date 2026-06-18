@@ -3,9 +3,20 @@ set -eu
 
 REPO="${QED_REPO:-CDU-Ge/qed}"
 VERSION="${QED_VERSION:-latest}"
-INSTALL_DIR="${QED_INSTALL_DIR:-$HOME/.local/bin}"
 BINARY_NAME="${QED_BINARY_NAME:-qed}"
 PROGRESS="${QED_PROGRESS:-auto}"
+
+# Detect if running as root
+is_root() {
+	[ "$(id -u)" -eq 0 ]
+}
+
+# Set default install directory based on user
+if is_root && [ -z "${QED_INSTALL_DIR:-}" ]; then
+	INSTALL_DIR="/usr/local/bin"
+else
+	INSTALL_DIR="${QED_INSTALL_DIR:-$HOME/.local/bin}"
+fi
 
 usage() {
 	cat <<EOF
@@ -16,7 +27,7 @@ Usage:
 
 Options:
   --version <tag>   Release tag to install, for example v0.1.0.
-  --dir <path>      Install directory. Defaults to ~/.local/bin.
+  --dir <path>      Install directory. Defaults to ~/.local/bin (or /usr/local/bin as root).
   --repo <repo>     GitHub repository. Defaults to CDU-Ge/qed.
   --progress <mode> Progress mode: auto, bar, quiet. Defaults to auto.
   --quiet           Same as --progress quiet.
